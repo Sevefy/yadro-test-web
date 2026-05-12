@@ -1,12 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% block head %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
-    <title>YADRO Concrete user</title>
+    <title>{% block title %}YADRO user{% endblock %}</title>
+    {% endblock %}
 </head>
 <body>
-    <h1>User ID: {{ id }}</h1>
+    <h1>User ID: {{ user.id }}</h1>
+    <table border="1">
+    <header>
+        <td style="font-weight: bold;">Имя</td>
+        <td style="font-weight: bold;">Фамилия</td>
+        <td style="font-weight: bold;">Пол</td>
+        <td style="font-weight: bold;">Телефон</td>
+        <td style="font-weight: bold;">Почта</td>
+        <td style="font-weight: bold;">Адресс</td>
+    </header>
+    <body>
+        <tr>
+            <td>{{user.first_name}}</td>
+            <td>{{user.last_name}}</td>
+            <td>{{user.gender}}</td>
+            <td>{{user.phone}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.address}}</td>
+        </tr>
+    </body>
+
+</table>
 </body>
 </html>
