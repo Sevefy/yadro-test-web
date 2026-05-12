@@ -1,22 +1,84 @@
 from typing import List
 
-from sqlalchemy import select
+from aiosqlite import IntegrityError
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from app.models.users import UserModel
-
-
+from functools import wraps
+import aiosqlite
+from app.config import logger
 class UserRepository:
     
     @staticmethod
     async def get_all_users(session: AsyncSession, limit: int = 50, offset: int = 0) -> List[UserModel]:
-        query = select(UserModel).limit(limit).offset(offset)
-        result = await session.execute(query)
-        return result.scalars().all()
-    
+        try:    
+            query = select(UserModel).limit(limit).offset(offset)
+            result = await session.execute(query)
+            return result.scalars().all()
+        except aiosqlite.Error as e:
+            logger.error(f"A database error occurred: {e}")
+            raise
         
     @staticmethod
     async def get_user_by_id(session: AsyncSession, user_id: int) -> UserModel:
-        query = select(UserModel).where(UserModel.id == user_id)
-        result = await session.execute(query)
-        return result.scalar()
+        try:
+            query = select(UserModel).where(UserModel.id == user_id)
+            result = await session.execute(query)
+            user = result.scalar()
+            if user is None:
+                raise ValueError
+            return user
+        except ValueError:
+            logger.error(f"Not found error: {user_id}")
+            raise ValueError("Not found error")
+
+        except SQLAlchemyError as e:
+            logger.error(f"DB error getting users count: {e}")
+            await session.rollback()
+            raise
+        
+    @staticmethod
+    async def create_user(session: AsyncSession, user: UserModel) -> None:
+        try:
+            session.add(user)
+            await session.commit()
+        except IntegrityError as e:
+            logger.error(f"Integrity error getting users count: {e}")
+            await session.rollback()
+            raise
+        except SQLAlchemyError as e:
+            logger.error(f"DB error getting users count: {e}")
+            await session.rollback()
+            raise
+    
+    @staticmethod
+    async def create_users_dump(session: AsyncSession, users: List[UserModel]) -> None:
+        try:
+            session.add_all(users)
+            await session.commit()
+        except IntegrityError as e:
+            logger.error(f"Integrity error getting users count: {e}")
+            await session.rollback()
+            raise
+        except SQLAlchemyError as e:
+            logger.error(f"DB error getting users count: {e}")
+            await session.rollback()
+            raise
+    
+    @staticmethod
+    async def get_total_users(session: AsyncSession) -> int:
+        try:
+            # Оборачиваем SQL в text()
+            result = await session.execute(text("SELECT COUNT(*) FROM users"))
+            count = result.scalar()  # удобнее, чем fetchone()[0]
+            return count if count is not None else 0
+        except IntegrityError as e:
+            logger.error(f"Integrity error getting users count: {e}")
+            await session.rollback()
+            raise
+        except SQLAlchemyError as e:
+            logger.error(f"DB error getting users count: {e}")
+            await session.rollback()
+            raise
+    
