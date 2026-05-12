@@ -8,5 +8,37 @@
 </head>
 <body>
     <h1>Пользователи</h1>
+    <table border="1">
+        <header>
+            <td style="font-weight: bold;">Имя</td>
+            <td style="font-weight: bold;">Фамилия</td>
+            <td style="font-weight: bold;">Пол</td>
+            <td style="font-weight: bold;">Телефон</td>
+            <td style="font-weight: bold;">Почта</td>
+            <td style="font-weight: bold;">Адресс</td>
+        </header>
+        {% for user in users %}
+            <tr>
+                <td>{{user.first_name}}</td>
+                <td>{{user.last_name}}</td>
+                <td>{{user.gender}}</td>
+                <td>{{user.phone}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.address}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <div class="pagination">
+        {% if current_page > 1 %}
+            <a href="?limit={{ limit }}&offset={{ offset - limit }}">Предыдущая</a>
+        {% endif %}
+        
+        <span>Страница {{ current_page }} из {{ total_pages }}</span>
+        
+        {% if current_page < total_pages %}
+            <a href="?limit={{ limit }}&offset={{ offset + limit }}">Следующая</a>
+        {% endif %}
+    </div>
+
 </body>
 </html>
