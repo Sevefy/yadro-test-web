@@ -8,9 +8,10 @@ from fastapi import HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from app.database import SessionDep
+from app.core.load_random_users import loader_random_users
+from app.database import SessionDep, setup_database
 from app.repository.users import UserRepository
-from app.routers.api.v1.pagination import pagination_parameters
+from app.routers.api.v1.pagination import paginationDep
 from app.routers.api.v1.users import router as user_router
 from app.config import logger
 
@@ -38,7 +39,7 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @app.get("/", response_class=HTMLResponse)
-async def get_index_page(request: Request, session: SessionDep, pagination: dict = Depends(pagination_parameters)):
+async def get_index_page(request: Request, session: SessionDep, pagination: paginationDep):
     limit, offset = pagination["limit"], pagination["offset"]
     total_users = await UserRepository.get_total_users(session)
     if not total_users:
