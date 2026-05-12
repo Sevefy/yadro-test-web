@@ -1,0 +1,14 @@
+from typing import Dict, List, Literal
+
+from pydantic import BaseModel, EmailStr, Field, HttpUrl
+
+
+class UserSchemaResponse(BaseModel):
+    first_name: str = Field(..., max_length=64, description="Имя")
+    last_name: str = Field(..., max_length=64, description="Фамилия")
+    gender: Literal["Мужчина", "Женщина"] = Field(..., description="Пол")
+    phone: str = Field(..., max_length=18, description="Телефон")
+    email: EmailStr = Field(..., description="Электронная почта")
+    address: str = Field(..., max_length=512, description="Место проживания")
+    
+    links: List[Dict[str, HttpUrl]] = Field(..., description="Ссылки")
