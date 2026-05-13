@@ -1,12 +1,15 @@
 import random
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
+from fastapi.responses import JSONResponse
 
+from app.core.load_random_users import loader_random_users
 from app.database import SessionDep
 from app.repository.users import UserRepository
 from app.routers.api.v1.pagination import paginationDep
-from app.schemas.users import UserSchemaResponse
+from app.schemas.users import LoadNewUsers, UserSchemaResponse
+from fastapi import BackgroundTasks
 
 router = APIRouter(
     prefix="/users",
@@ -26,9 +29,7 @@ async def get_users(session: SessionDep, pagination: paginationDep) -> List[User
             phone=user.phone,
             email=user.email,
             address=user.address,
-            links=[
-                {"self": f"http://localhost:8000/api/v1{router.prefix}/{user.id}"},
-            ]
+            links={"self": f"http://localhost:8000/api/v1{router.prefix}/{user.id}"},
         )
         for user in users
     ]
@@ -49,9 +50,7 @@ async def get_random_user(session: SessionDep) -> UserSchemaResponse:
             phone=user.phone,
             email=user.email,
             address=user.address,
-            links=[
-                {"all": "http://localhost:8000/api/v1/users"}
-            ]
+            links={"all": "http://localhost:8000/api/v1/users"}
         )
 
 @router.get(path="/{user_id}", status_code=200)
@@ -65,10 +64,15 @@ async def get_concrete_user(session: SessionDep, user_id:int) -> UserSchemaRespo
                 phone=user.phone,
                 email=user.email,
                 address=user.address,
-                links=[
-                    {"all": "http://localhost:8000/api/v1/users"}
-                ]
+                links={"all": "http://localhost:8000/api/v1/users"}
             )
     except ValueError:
         raise HTTPException(status_code=404, detail=f"Пользователь с id={user_id} не найден")
     
+@router.post(path="/load_from_api", status_code=202)
+async def load_new_users_from_api(load: LoadNewUsers, background_task: BackgroundTasks) -> JSONResponse:
+    background_task.add_task(loader_random_users, load.count)
+    return JSONResponse(
+        status_code=202,
+        content={"message": "Loading started", "count": load.count}
+    )
