@@ -9,11 +9,9 @@
     {% endblock %}
 </head>
 <body>
-    <h1>User ID: {{ user.id }}</h1>
+    <h1>{{user.first_name}} {{user.last_name}}</h1>
     <table border="1">
     <header>
-        <td style="font-weight: bold;">Имя</td>
-        <td style="font-weight: bold;">Фамилия</td>
         <td style="font-weight: bold;">Пол</td>
         <td style="font-weight: bold;">Телефон</td>
         <td style="font-weight: bold;">Почта</td>
@@ -21,8 +19,6 @@
     </header>
     <body>
         <tr>
-            <td>{{user.first_name}}</td>
-            <td>{{user.last_name}}</td>
             <td>{{user.gender}}</td>
             <td>{{user.phone}}</td>
             <td>{{user.email}}</td>
