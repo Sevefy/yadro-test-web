@@ -56,11 +56,15 @@ source ./.venv/bin/activate.fish
 #Для windows
 ./.venv/Scripts/activate
 ```
-3. Запустить приложение
+3. Установите зависимости
+```bash
+pip install -r requirements.txt
+```
+4. Запустить приложение
 ```
 python -m app.main
 ```
-4. Приложение будет доступно по адресу: `http://localhost:8000`
+5. Приложение будет доступно по адресу: `http://localhost:8000`
 
 ## API документация
 
