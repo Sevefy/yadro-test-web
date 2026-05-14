@@ -1,19 +1,11 @@
+
+import pytest
 from faker import Faker
 from httpx import ASGITransport, AsyncClient
-import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from app.core.load_random_users import loader_random_users
-from app.database import Base
-from app.main import app
-
-from typing import Annotated
-
-from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase
-from app.database import get_session
+
+from app.database import Base, get_session
+from app.main import app
 from app.models.users import UserModel
 
 SQLALCHEMY_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
@@ -52,7 +44,7 @@ async def setup_db():
 @pytest.fixture
 async def client():
     transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://localhost:8000") as c:
+    async with AsyncClient(transport=transport, base_url="http://test") as c:
         yield c
         
 @pytest.fixture
@@ -75,13 +67,13 @@ async def user():
 async def users():
     fake = Faker("ru_RU")
     instances = []
-    for _ in range(1000):
+    for i in range(1000):
         user = UserModel(
             first_name=fake.first_name(),
             last_name=fake.last_name(),
             gender=fake.random_element(elements=("Мужчина", "Женщина")),
             phone=fake.phone_number(),
-            email=fake.email(),
+            email=f"user{i}@test.ru",
             address=fake.address(),
         )
         instances.append(user)
