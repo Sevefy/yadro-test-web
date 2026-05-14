@@ -14,4 +14,4 @@ class UserSchemaResponse(BaseModel):
     links: dict[str, HttpUrl] = Field(..., description="Ссылки")
 
 class LoadNewUsers(BaseModel):
-    count: int = Field(default=0, description="Количество пользователей для загрузки")
+    count: int = Field(ge=1, default=1, description="Количество пользователей для загрузки")
