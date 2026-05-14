@@ -19,4 +19,6 @@ class Settings(BaseSettings):
         env_prefix="SERVER_", env_file=".env", extra="ignore"
     )
     host: str
-    port: int
+    debug: bool = False
+
+settings = Settings()
