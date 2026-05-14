@@ -3,7 +3,7 @@ import json
 from typing import Any
 
 import httpx
-from app.database import AsyncSessionLocal, get_session
+from app.database import AsyncSessionLocal
 from app.models.users import UserModel
 from app.repository.users import UserRepository
 from app.config import logger

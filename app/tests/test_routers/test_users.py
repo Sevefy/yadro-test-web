@@ -1,8 +1,6 @@
 from httpx import AsyncClient
 import pytest
 
-from app.schemas.users import UserSchemaResponse
-
 @pytest.mark.asyncio
 async def test_get_users_empty(client: AsyncClient):
     response = await client.get("/api/v1/users")

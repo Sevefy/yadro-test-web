@@ -23,6 +23,7 @@ async def test_get_random_users(api_return, count_need, expected_calls):
             
 @pytest.mark.asyncio
 async def test_loader_random_users_api_error():
+    # TODO Может долго выполняться из-за декоратора retry и ожидания 
     with mock.patch("app.core.load_random_users.get_users_from_randomdatatools") as mock_api, \
          mock.patch("app.core.load_random_users.load_data_db") as mock_load:
         mock_api.side_effect = httpx.HTTPError("Error")
@@ -32,6 +33,7 @@ async def test_loader_random_users_api_error():
         
 @pytest.mark.asyncio
 async def test_loader_random_users_api_value_error():
+    # TODO Может долго выполняться из-за декоратора retry и ожидания 
     with mock.patch("app.core.load_random_users.get_users_from_randomdatatools") as mock_api, \
          mock.patch("app.core.load_random_users.load_data_db") as mock_load:
         mock_api.side_effect = ValueError
