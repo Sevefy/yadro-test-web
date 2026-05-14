@@ -10,21 +10,22 @@
 </head>
 <body>
     <h1>{{user.first_name}} {{user.last_name}}</h1>
+    <a href={{user.links.all}}>Вернуться</a>
     <table border="1">
-    <header>
+    <thead>
         <td style="font-weight: bold;">Пол</td>
         <td style="font-weight: bold;">Телефон</td>
         <td style="font-weight: bold;">Почта</td>
         <td style="font-weight: bold;">Адресс</td>
-    </header>
-    <body>
+    </thead>
+    <tbody>
         <tr>
             <td>{{user.gender}}</td>
             <td>{{user.phone}}</td>
             <td>{{user.email}}</td>
             <td>{{user.address}}</td>
         </tr>
-    </body>
+    </tbody>
 
 </table>
 </body>

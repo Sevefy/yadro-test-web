@@ -7,7 +7,12 @@
     <title>YADRO WEB TEST</title>
 </head>
 <body>
-    <h1 >Пользователи</h1>
+    <div>
+        <span style="font-size: xx-large; font-weight: bold;">Пользователи</span>
+        <span>всего {{total_users}}</span>
+    </div>
+
+
     <div style="flex: content; width: max-content;justify-content: space-between; ">
         <a href="/random">Получить случайного пользователя</a>
         <div>
@@ -24,7 +29,7 @@
         <option value=100 {% if limit==100 %} selected="selected"{% endif %}>100</option>
     </select>
     <table border="1">
-        <header>
+        <thead>
             <td style="font-weight: bold;">Имя</td>
             <td style="font-weight: bold;">Фамилия</td>
             <td style="font-weight: bold;">Пол</td>
@@ -32,7 +37,8 @@
             <td style="font-weight: bold;">Почта</td>
             <td style="font-weight: bold;">Адрес</td>
             <td style="font-weight: bold;">Ссылка</td>
-        </header>
+        </thead>
+        <tbody>
         {% for user in users %}
             <tr>
                 <td>{{user.first_name}}</td>
@@ -46,8 +52,12 @@
                 </td>
             </tr>
         {% endfor %}
+        </tbody>
     </table>
     <div class="pagination">
+        {% if current_page != 1 %}
+            <a href="?limit={{ limit }}&offset={{ 0 }}">Первая</a>
+        {% endif %}
         {% if current_page > 1 %}
             <a href="?limit={{ limit }}&offset={{ offset - limit }}">Предыдущая</a>
         {% endif %}
@@ -56,6 +66,10 @@
         
         {% if current_page < total_pages %}
             <a href="?limit={{ limit }}&offset={{ offset + limit }}">Следующая</a>
+        {% endif %}
+
+        {% if current_page != total_pages %}
+            <a href="?limit={{ limit }}&offset={{ limit * (total_pages - 1) }}">Последняя</a>
         {% endif %}
     </div>
 
