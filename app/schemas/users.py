@@ -1,4 +1,4 @@
-from typing import Dict, List, Literal
+from typing import Literal
 
 from pydantic import BaseModel, EmailStr, Field, HttpUrl
 
@@ -11,7 +11,7 @@ class UserSchemaResponse(BaseModel):
     email: EmailStr = Field(..., description="Электронная почта")
     address: str = Field(..., max_length=512, description="Место проживания")
     
-    links: Dict[str, HttpUrl] = Field(..., description="Ссылки")
+    links: dict[str, HttpUrl] = Field(..., description="Ссылки")
 
 class LoadNewUsers(BaseModel):
-    count: int =Field(default=0, description="Количество пользователей для загрузки")
+    count: int = Field(default=0, description="Количество пользователей для загрузки")
