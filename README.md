@@ -101,3 +101,17 @@ pytest -v
 Малофеев Арсений
 
 arseniy.malofeev@bk.ru
+
+# Скриншоты web-приложения
+## Главная страница
+![Главная страница](/screenshots/index.png)
+## Конкретный пользователь
+![Конкретный пользователь](/screenshots/concrete.png)
+## Случайный пользователь
+![Случайный пользователь](/screenshots/random.png)
+## Ошибка 404, нет такого пользователя
+![404](/screenshots/error404.png)
+## API Docs
+![docs](/screenshots/docs.png)
+## API ReDoc
+![docs](/screenshots/redoc.png)
