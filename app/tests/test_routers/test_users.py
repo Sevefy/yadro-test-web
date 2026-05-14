@@ -1,6 +1,8 @@
 from httpx import AsyncClient
 import pytest
 
+from app.schemas.users import UserSchemaResponse
+
 @pytest.mark.asyncio
 async def test_get_users_empty(client: AsyncClient):
     response = await client.get("/api/v1/users")
@@ -23,7 +25,7 @@ async def test_get_user_not_found(client: AsyncClient, user):
 @pytest.mark.asyncio
 async def test_get_random_user_empty(client: AsyncClient):
     response = await client.get("/api/v1/users/random")
-    assert response.status_code == 400
+    assert response.status_code == 404
 
 @pytest.mark.asyncio
 async def test_get_random_user(client: AsyncClient, user):
@@ -48,3 +50,11 @@ async def test_get_users_with_pagination(limit, offset, expected_count,  client,
     assert len(data) == expected_count
     if len(data):
         assert data[0]["first_name"] == users[offset].first_name 
+
+@pytest.mark.asyncio
+async def test_get_user_fields(client, user):
+    response = await client.get("/api/v1/users/random")
+    assert response.status_code == 200
+    data = response.json()
+    keys = list(data.keys())
+    assert ["first_name", "last_name", "gender", "phone", "email", "address", "links"] == keys
